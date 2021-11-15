@@ -24,18 +24,41 @@ const style = {
     p: 4,
   };
 
+  const SortingDefaultValue = {
+    country: null,
+    total: null
+};
+
 export const CountriesTable = ({data}) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [modalData, setModalData] = useState({});
 
-    const [isSorting, setIsSorting] = useState({});
-
     const pushDatatoModalOnClick = (country) => {
         handleOpen();
         setModalData(country);
     }
+
+    const [isSorting, setSorting] = useState(SortingDefaultValue);
+
+    const getSorting = isSorting => isSorting  ? !isSorting : true;
+
+    const onClickSorting = (type) => {
+        setSorting((prevSorting) => ({
+            ...prevSorting,
+            Country: type === 'Country' ? getSorting(prevSorting.Country) : null,
+            TotalConfirmed: type === 'TotalConfirmed' ? getSorting(prevSorting.TotalConfirmed) : null
+        }));
+
+        data.sort(sortByField(type, isSorting[type]));
+    };
+
+    const sortByField = (field, type) => {
+        const reverse = type ? 1 : -1 ;
+        return (a, b) => a[field] > b[field] ? 1 * reverse : -1 * reverse;
+    };
+ 
 
 return (
     <TableContainer component={Paper} data-testid='contacts-table-container'>
@@ -43,8 +66,14 @@ return (
         <TableHead>
             <TableRow>
                 <TableCell align="left">№</TableCell>
-                <TableCell align="left">Country</TableCell>
-                <TableCell align="left">Total Confirmed</TableCell>
+                <TableCell 
+                    align="left"
+                    onClick={() => onClickSorting('Country')}   
+                >Country</TableCell>
+                <TableCell 
+                    align="left"
+                    onClick={() => onClickSorting('TotalConfirmed')} 
+                >Total Confirmed</TableCell>
             </TableRow>
         </TableHead>
         <TableBody>
@@ -74,51 +103,7 @@ return (
         >
             <Box sx={style}>
                 <ModalData modalData={modalData} handleClose={handleClose}/>
-            {/* <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell align="center">{modalData.Country}</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    <TableRow key={modalData.ID}>
-                        <TableCell align="left" >
-                            icon Confirmed
-                        </TableCell>
-                        <TableCell align="left">
-                            'Total Confirmed'
-                        </TableCell>
-                        <TableCell align="left">
-                            {modalData.TotalConfirmed}
-                        </TableCell>
-                    </TableRow>
-                    <TableRow >
-                        <TableCell align="left" >
-                            icon TotalDeaths
-                        </TableCell>
-                        <TableCell align="left">
-                            'Total Deaths'
-                        </TableCell>
-                        <TableCell align="left">
-                            {modalData.TotalDeaths}
-                        </TableCell>
-                    </TableRow>
-                    <TableRow >
-                        <TableCell align="left" >
-                            icon
-                        </TableCell>
-                        <TableCell align="left">
-                            'Total Recovered'
-                        </TableCell>
-                        <TableCell align="left">
-                            {modalData.TotalRecovered}
-                        </TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table> */}
-
             </Box>
-
         </Modal>
     </TableContainer>
     );

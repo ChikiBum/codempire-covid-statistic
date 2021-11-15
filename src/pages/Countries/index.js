@@ -54,9 +54,7 @@ export const Countries = (props) => {
 
     const filteredData = countries.data.filter( item => item.Country.toLowerCase().includes(filters.country.toLowerCase()));
 
-    console.log('filteredData: ', filteredData)
-
-    return <>
+return <>
     <Container className={classes.root}>
         <Grid container >
           <Grid item xs={12} className={classes.headContainer} >

@@ -5,8 +5,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Button from '@mui/material/Button';
-
-
+import Confirmed from '../../../images/Confirmed_icon.png'
+import TotalDeath from '../../../images/Deaths_icon.png'
+import Recovered from '../../../images/Recovered_icon.png'
 
 export const ModalData = (props) => {
 
@@ -24,7 +25,7 @@ export const ModalData = (props) => {
             <TableBody>
                 <TableRow key={props.modalData.ID}>
                     <TableCell align="left" >
-                        icon Confirmed
+                        <img src={Confirmed} alt="Confirmed"  />
                     </TableCell>
                     <TableCell align="left">
                         'Total Confirmed'
@@ -35,7 +36,7 @@ export const ModalData = (props) => {
                 </TableRow>
                 <TableRow >
                     <TableCell align="left" >
-                        icon TotalDeaths
+                        <img src={TotalDeath} alt="Total Death"  />
                     </TableCell>
                     <TableCell align="left">
                         'Total Deaths'
@@ -46,7 +47,7 @@ export const ModalData = (props) => {
                 </TableRow>
                 <TableRow >
                     <TableCell align="left" >
-                        icon
+                        <img src={Recovered} alt="Recovered"  />
                     </TableCell>
                     <TableCell align="left">
                         'Total Recovered'
