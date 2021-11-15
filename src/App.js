@@ -1,11 +1,7 @@
 import { Countries } from "./pages/Countries"; 
 
 function App() {
-  return (
-    <>
-      <Countries />
-    </>
-  );
+  return <Countries />
 }
 
 export default App;

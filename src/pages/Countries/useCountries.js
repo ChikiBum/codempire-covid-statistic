@@ -15,7 +15,7 @@ export const useCountries = () => {
                 if (error) {
                     throw new Error(error.message);
                 }
-                setData(Countries);
+                setData(Countries.slice(0, 5) );
                 setIsError(false);
             } catch (error){
                 setIsError(true);

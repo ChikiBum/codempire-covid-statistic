@@ -5,7 +5,11 @@ import { useCountries } from "./useCountries";
 import { Box } from '@mui/system';
 import logo from "../../images/logo.png";
 import { CountriesTable } from './CountriesTable';
-import BasicModal from './Modal';
+import TextField from '@mui/material/TextField';
+import IconButton from "@material-ui/core/IconButton";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import SearchIcon from '@mui/icons-material/Search';
+import { useState } from 'react';
 
 
 const useStyles = makeStyles((theme) =>
@@ -33,10 +37,24 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
+const FilterDefaultValue = {
+  country: ''
+};
+
 export const Countries = (props) => { 
     const classes = useStyles();
     const countries = useCountries();
+    const [filters, setFilters] = useState(FilterDefaultValue);
+    const changeFilter = (e) => {
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        country: e.target.value
+      }))
+    }
 
+    const filteredData = countries.data.filter( item => item.Country.toLowerCase().includes(filters.country.toLowerCase()));
+
+    console.log('filteredData: ', filteredData)
 
     return <>
     <Container className={classes.root}>
@@ -49,10 +67,24 @@ export const Countries = (props) => {
               <Typography variant="h3" component="h1">
                   STATISTIC:
               </Typography>
-             <div> ..Search</div>
+              <TextField
+                label="Search..."
+                // size='small'
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment>
+                      <IconButton>
+                        <SearchIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
+                value={filters.country}
+                onChange={changeFilter}
+                autoFocus={true}
+              />
             </Box>
           </Grid>
-          <BasicModal/>
           <Grid item xs={12}>
             {(() => {
                 if(countries.isLoading){
@@ -62,7 +94,7 @@ export const Countries = (props) => {
                     return <div> ...isError</div>
                 }
                     // return <div>Countries {countries.data[1].Country}</div>
-                    return <CountriesTable data={countries.data}/>
+                    return <CountriesTable data={filteredData}/>
             })()}
             </Grid>
         </Grid>
