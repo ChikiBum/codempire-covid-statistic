@@ -11,12 +11,8 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import SearchIcon from '@mui/icons-material/Search';
 import { useState } from 'react';
 
-
 const useStyles = makeStyles((theme) =>
   createStyles({
-    root: {
-      marginTop: theme.spacing(4)
-    },
     headContainer: {
       marginBottom: theme.spacing(4)
     },
@@ -24,15 +20,15 @@ const useStyles = makeStyles((theme) =>
       marginBottom: theme.spacing(3)
     },
     title: {
-        paddingTop: '98px',
-        textAlign: "center",
-        fontSize: "72px"
+        paddingTop: '68px',
+        width: '100%'
       },
     logo: {
         maxWidth: '200px',
         maxHeight: '200px',
-        marginTop: '40px',
-        marginLeft: '60px'
+      },
+    seacrh: {
+      marginTop: '68px',
       }
   })
 );
@@ -55,22 +51,36 @@ export const Countries = (props) => {
     const filteredData = countries.data.filter( item => item.Country.toLowerCase().includes(filters.country.toLowerCase()));
 
 return <>
-    <Container className={classes.root}>
+  
+     <Container sx={{ maxWidth: '1800px !important'}}>
         <Grid container >
           <Grid item xs={12} className={classes.headContainer} >
             <Box sx={{ display: 'flex',
                       flexDirection: 'row',
-                      justifyContent: 'space-between' }}>
-            <img src={logo} alt="Kitty Katty!" className={classes.logo} />
-              <Typography variant="h3" component="h1">
+                      justifyContent: 'space-between', 
+                      paddingTop: '1rem'}}>
+              <img 
+                src={logo} 
+                alt="covid-logo" 
+                className={classes.logo} 
+              />
+              <Typography 
+                variant="h2" 
+                component="h1"
+                className={classes.title} >
                   STATISTIC:
               </Typography>
               <TextField
                 label="Search..."
+                className={classes.seacrh} 
+                sx={{
+                  marginTop: '75px',
+                  width: '600px'
+                }}
                 // size='small'
                 InputProps={{
                   endAdornment: (
-                    <InputAdornment>
+                    <InputAdornment position="start">
                       <IconButton>
                         <SearchIcon />
                       </IconButton>
@@ -97,6 +107,5 @@ return <>
             </Grid>
         </Grid>
     </Container>
-   
-    </>
+ </>
 }

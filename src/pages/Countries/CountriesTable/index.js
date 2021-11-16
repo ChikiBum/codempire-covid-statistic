@@ -8,11 +8,58 @@ import Paper from '@mui/material/Paper';
 import { useState } from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import { ModalData } from '../ModalData';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-const style = {
+const theme = createTheme({
+    components: {
+        MuiTable: {
+            styleOverrides: {
+                root: {
+                    borderCollapse: 'separate',
+                    borderSpacing: '0 11px'
+                },
+            },
+        },
+        MuiTableRow: {
+            styleOverrides: {
+                root: {
+                    borderCollapse: 'separate',
+                    borderSpacing: '7px 11px'
+                },
+            },
+        },
+        MuiTableCell: {
+            styleOverrides: {
+                root: {
+                   border: '1px solid rgba(224, 224, 224, 1)',
+                },
+            },
+        },
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    borderRadius: '20px',
+                    width: '171px',
+                    height : '49px',
+                },
+            },
+        },
+        MuiGrid: {
+            styleOverrides: {
+                root: {
+                    marginBottom: '2.5rem',
+                },
+            },
+        },
+        
+    },
+});
+
+const modalWindowBox = {
     position: 'absolute',
     top: '50%',
     left: '50%',
@@ -59,52 +106,79 @@ export const CountriesTable = ({data}) => {
         return (a, b) => a[field] > b[field] ? 1 * reverse : -1 * reverse;
     };
  
+    const getSortingIcon = (type) => {
+         if (type !== null && type !== undefined){
+            return type ? <ArrowUpwardIcon sx={{fontSize: 'small'}}/> : <ArrowDownwardIcon sx={{fontSize: 'small'}}/>
+        }
+        return null
+    }
 
 return (
-    <TableContainer component={Paper} data-testid='contacts-table-container'>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-            <TableRow>
-                <TableCell align="left">№</TableCell>
-                <TableCell 
-                    align="left"
-                    onClick={() => onClickSorting('Country')}   
-                >Country</TableCell>
-                <TableCell 
-                    align="left"
-                    onClick={() => onClickSorting('TotalConfirmed')} 
-                >Total Confirmed</TableCell>
-            </TableRow>
-        </TableHead>
-        <TableBody>
-            {data.map((country, index) => (
-            <TableRow
-                key={country.ID}
-                onClick={() => pushDatatoModalOnClick(country)}   
+    <ThemeProvider theme={theme}>
+        <TableContainer  data-testid='contacts-table-container'>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+                <TableRow>
+                    <TableCell 
+                        align="left"
+                        sx={{ 
+                            width: '1.5rem', 
+                            borderRadius: '20px 0 0 20px'
+                        }}
+                    >№</TableCell>
+                    <TableCell 
+                        align="left"
+                        onClick={() => onClickSorting('Country')} 
+                    >Country {getSortingIcon(isSorting.Country)}
+                    </TableCell>
+                    <TableCell 
+                        align="left"
+                        onClick={() => onClickSorting('TotalConfirmed')} 
+                        sx={{ width: 250,
+                            borderRadius: '0 20px 20px 0'
+                        }}
+                    >
+                        Total Confirmed {getSortingIcon(isSorting.TotalConfirmed)}
+                    </TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {data.map((country, index) => ( 
+                    <TableRow
+                        key={country.ID}
+                        onClick={() => pushDatatoModalOnClick(country)}   
+                    >
+                        <TableCell 
+                            align="left" 
+                            sx={{borderRadius: '20px 0 0 20px'}}    
+                        >
+                            {index}
+                        </TableCell>
+                        <TableCell align="left">
+                            {country.Country}
+                        </TableCell>
+                        <TableCell 
+                            align="left"
+                            sx={{borderRadius: '0 20px 20px 0'}}     
+                        >
+                            {country.TotalConfirmed}
+                        </TableCell>
+                        
+                    </TableRow>
+                ))}
+            </TableBody>
+            </Table>
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
             >
-                <TableCell align="left" >
-                    {index}
-                </TableCell>
-                <TableCell align="left">
-                    {country.Country}
-                </TableCell>
-                <TableCell align="left">
-                    {country.TotalConfirmed}
-                </TableCell>
-            </TableRow>
-            ))}
-        </TableBody>
-        </Table>
-        <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-        >
-            <Box sx={style}>
-                <ModalData modalData={modalData} handleClose={handleClose}/>
-            </Box>
-        </Modal>
-    </TableContainer>
+                <Box sx={modalWindowBox}>
+                    <ModalData modalData={modalData} handleClose={handleClose}/>
+                </Box>
+            </Modal>
+        </TableContainer>
+    </ThemeProvider>
     );
 }
