@@ -21,7 +21,7 @@ describe('Countries get data', () => {
         await waitForElementToBeRemoved(loader);
         
         expect(loader).not.toBeInTheDocument();
-        expect(screen.getByTestId('contacts-table-container')).toBeInTheDocument();
+        expect(screen.getByTestId('country-table-container')).toBeInTheDocument();
         
     });
 

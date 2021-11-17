@@ -129,7 +129,7 @@ export const CountriesTable = ({data}) => {
 
 return (
     <ThemeProvider theme={theme}>
-        <TableContainer  data-testid='contacts-table-container'>
+        <TableContainer  data-testid='country-table-container'>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
                 <TableRow>
