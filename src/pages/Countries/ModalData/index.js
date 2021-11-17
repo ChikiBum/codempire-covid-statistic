@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell  from '@mui/material/TableCell';
@@ -52,30 +53,39 @@ const useStyles = makeStyles((theme) =>
         fontSize: '3rem',
         fontWeight: '700'
     },
-    box: {
+    boxModal: {
         display: 'flex',
         justifyContent: 'center',
         paddingTop: '30px',
     },
+    closeButton: {
+        borderRadius: '20px',
+        backgroundColor: '#2196F3',
+        color: 'white',
+        width: '171px',
+        height: '49px',
+        fontSize: '1.5rem',
+        fontWeight: '700'
+    }
   })
 );
 
-export const ModalData = (props) => {
+export const ModalData = ({modalData: {Country, ID, TotalConfirmed, TotalDeaths, TotalRecovered }, handleClose}) => {
    const classes = useStyles();
 
    return (
     <>
     <ThemeProvider theme={theme}>
-        <Container>
+        <Container >
             <Grid  >
                 <Grid item xs={12} className={classes.headContainer} >
-                    {props.modalData.Country}
+                    {Country}
                 </Grid>
             </Grid>
         </Container>
         <Table aria-label="country table">
             <TableBody >
-                <TableRow key={props.modalData.ID} >
+                <TableRow key={ID} >
                     <TableCell align="left">
                         <img src={Confirmed} alt="Confirmed"  />
                     </TableCell>
@@ -83,7 +93,7 @@ export const ModalData = (props) => {
                         Total Confirmed
                     </TableCell>
                     <TableCell align="right">
-                        {props.modalData.TotalConfirmed}
+                        {TotalConfirmed}
                     </TableCell>
                 </TableRow>
                 <TableRow >
@@ -94,7 +104,7 @@ export const ModalData = (props) => {
                         Total Deaths
                     </TableCell>
                     <TableCell align="right">
-                        {props.modalData.TotalDeaths}
+                        {TotalDeaths}
                     </TableCell>
                 </TableRow>
                 <TableRow >
@@ -105,19 +115,25 @@ export const ModalData = (props) => {
                         Total Recovered
                     </TableCell>
                     <TableCell align="right">
-                        {props.modalData.TotalRecovered}
+                        {TotalRecovered}
                     </TableCell>
                 </TableRow>
             </TableBody>
         </Table>
-        <Box className={classes.box}>
+        <Box className={classes.boxModal}>
             <Button 
                 className={classes.closeButton}
                 variant='contained'
-                onClick={props.handleClose}
+                onClick={handleClose}
+                data-testid={'modal-close'}
             >OK</Button>
         </Box>
     </ThemeProvider>
     </>
   )
+}
+
+ModalData.propTypes = {
+    modalData: PropTypes.object.isRequired,
+    handleClose: PropTypes.func.isRequired,
 }

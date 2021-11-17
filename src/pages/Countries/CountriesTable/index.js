@@ -1,11 +1,11 @@
+import PropTypes from 'prop-types';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { useState } from 'react';
+import { useCallback,  useState } from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import { ModalData } from '../ModalData';
@@ -20,7 +20,7 @@ const theme = createTheme({
             styleOverrides: {
                 root: {
                     borderCollapse: 'separate',
-                    borderSpacing: '0 11px'
+                    borderSpacing: '0 11px',
                 },
             },
         },
@@ -28,7 +28,7 @@ const theme = createTheme({
             styleOverrides: {
                 root: {
                     borderCollapse: 'separate',
-                    borderSpacing: '7px 11px'
+                    borderSpacing: '7px 11px',
                 },
             },
         },
@@ -36,6 +36,8 @@ const theme = createTheme({
             styleOverrides: {
                 root: {
                    border: '1px solid rgba(224, 224, 224, 1)',
+                   fontWeight: '700',
+                   fontSize: '1.5rem'
                 },
             },
         },
@@ -72,23 +74,25 @@ const modalWindowBox = {
   };
 
   const SortingDefaultValue = {
-    country: null,
-    total: null
+    Country: null,
+    TotalConfirmed: null
 };
+
 
 export const CountriesTable = ({data}) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [modalData, setModalData] = useState({});
-
-    const pushDatatoModalOnClick = (country) => {
-        handleOpen();
-        setModalData(country);
-    }
-
     const [isSorting, setSorting] = useState(SortingDefaultValue);
 
+    //push data to modal window
+    const pushDatatoModalOnClick = useCallback((country) => {
+            handleOpen();
+            setModalData(country);
+        }, [])
+
+    //Sorting data on
     const getSorting = isSorting => isSorting  ? !isSorting : true;
 
     const onClickSorting = (type) => {
@@ -100,15 +104,25 @@ export const CountriesTable = ({data}) => {
 
         data.sort(sortByField(type, isSorting[type]));
     };
+   
 
     const sortByField = (field, type) => {
         const reverse = type ? 1 : -1 ;
         return (a, b) => a[field] > b[field] ? 1 * reverse : -1 * reverse;
     };
  
+    //icons on page for sorting
     const getSortingIcon = (type) => {
          if (type !== null && type !== undefined){
-            return type ? <ArrowUpwardIcon sx={{fontSize: 'small'}}/> : <ArrowDownwardIcon sx={{fontSize: 'small'}}/>
+            return type ? 
+            <ArrowUpwardIcon 
+                sx={{fontSize: 'small'}}
+                data-testid='up-row' 
+            /> : 
+            <ArrowDownwardIcon 
+                sx={{fontSize: 'small'}}
+                data-testid='down-row' 
+            />
         }
         return null
     }
@@ -123,20 +137,31 @@ return (
                         align="left"
                         sx={{ 
                             width: '1.5rem', 
-                            borderRadius: '20px 0 0 20px'
+                            borderRadius: '20px 0 0 20px',
+                            color: 'white',
+                            backgroundColor: '#2196F3',
                         }}
                     >№</TableCell>
                     <TableCell 
                         align="left"
-                        onClick={() => onClickSorting('Country')} 
-                    >Country {getSortingIcon(isSorting.Country)}
+                        sx={{ 
+                            color: 'white',
+                            backgroundColor: '#2196F3',
+                        }}
+                        onClick={() => onClickSorting('Country')}
+                        data-testid='country-field' 
+                    >
+                        Country {getSortingIcon(isSorting.Country)}
                     </TableCell>
                     <TableCell 
                         align="left"
                         onClick={() => onClickSorting('TotalConfirmed')} 
                         sx={{ width: 250,
-                            borderRadius: '0 20px 20px 0'
+                            borderRadius: '0 20px 20px 0',
+                            color: 'white',
+                            backgroundColor: '#2196F3',
                         }}
+                        data-testid='total-field' 
                     >
                         Total Confirmed {getSortingIcon(isSorting.TotalConfirmed)}
                     </TableCell>
@@ -146,13 +171,14 @@ return (
                 {data.map((country, index) => ( 
                     <TableRow
                         key={country.ID}
-                        onClick={() => pushDatatoModalOnClick(country)}   
+                        onClick={() => pushDatatoModalOnClick(country)}
+                        data-testid={'table-cell'+ index}
                     >
                         <TableCell 
                             align="left" 
                             sx={{borderRadius: '20px 0 0 20px'}}    
                         >
-                            {index}
+                            {index + 1}
                         </TableCell>
                         <TableCell align="left">
                             {country.Country}
@@ -173,6 +199,7 @@ return (
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
+                data-testid={'modal-window'}
             >
                 <Box sx={modalWindowBox}>
                     <ModalData modalData={modalData} handleClose={handleClose}/>
@@ -181,4 +208,8 @@ return (
         </TableContainer>
     </ThemeProvider>
     );
+}
+
+CountriesTable.propTypes = {
+    data: PropTypes.array.isRequired,
 }
